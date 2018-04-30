@@ -1,2 +1,2 @@
 # PyreeGPN18
-VJ Pyree show from GPN18
+These are the show files used for live shadering in the Lounge at GPN18
