@@ -9,15 +9,31 @@ layout (location = 2) out vec3 normOut;
 
 uniform mat4 MVP;
 
-layout(binding=1) uniform sampler2D tex2;
+layout(binding=0) uniform sampler2D tex1;
 
 uniform float time;
+uniform vec2 indx;
+
 uniform float beat;
 uniform float jerk;
 
+uniform float snare;
 
-uniform float rand2;
-uniform float rand3;
+
+vec2 cexp(vec2 z)
+{
+    return exp(z.x) * vec2(cos(z.y), sin(z.y));
+}
+
+vec2 clog(vec2 z)
+{
+    return vec2(log(length(z)), atan(z.y, z.x));
+}
+
+vec2 cpow(vec2 z, float p)
+{
+    return cexp(clog(z) * p);
+}
 
 mat3 rot3(vec3 axis, float angle)
 {
@@ -35,45 +51,33 @@ mat2 rot2(float a) {
 	return mat2(cos(a), -sin(a), sin(a), cos(a));
 }
 
-vec2 cexp(vec2 z)
-{
-    return exp(z.x) * vec2(cos(z.y), sin(z.y));
-}
-
-vec2 clog(vec2 z)
-{
-    return vec2(log(length(z)), atan(z.y, z.x));
-}
-
-vec2 cpow(vec2 z, float p)
-{
-    return cexp(clog(z) * p);
-}
-
-
 void main()
 {
-    vec3 pos = posIn;
+    vec3 wPos = posIn;
 
+    wPos.y += sin(time*10 + length(indx))*5;
 
-    vec2 uv = uvIn;
-    pos.xy *= rot2(uv.y*10*rand2);
-    pos.xy = cpow(pos.xy, 2)*0.2;
+    //wPos.xz *= rot2(wPos.y * jerk);
+
+    wPos.y += cos(length(indx)*1. - time - beat * 3.1415 * 2.)*2. + 0.5;
+    wPos.y += tan(time*1 + length(indx) * 3.);
+
+    wPos.y += smoothstep(15., 18., wPos.y) * wPos.y * wPos.y;
+
+    //wPos.xyz *= rot3(vec3(0, 1, 0), beat);
+
+    vec4 pos = MVP * vec4(wPos, 1);
     vec3 norm = normalize( transpose(inverse(mat3(MVP))) * normIn );
-    //pos.z += ((texture(tex2, uvIn).rgb - vec3(0.5)) * 6.5 * jerk * jerk * jerk * jerk).z;
 
-    pos.xy -= (norm * (sin(uv.y) + sin(uv.y) * 0.1)).xy;
+    vec3 samp = texture(tex1, vec2(uvIn.x, 1-uvIn.y)).rgb;
+    //pos.xyz += norm*clamp(sin(snare * 3.14159), 0., 1.)*0.2;
 
 
-    float fac = sin(uv.y * 10 + time * 10) * 1;
-    fac *= fac;
 
-    pos.xy += ((texture(tex2, uvIn - vec2(rand3)).rgb - vec3(0.5)) * 6.5 * jerk * jerk).xy * 0.08 * fac;
 
-    //pos -= norm / abs(tan((uv.x * uv.y)*3.1415*2. + time));
+    gl_Position = pos;
 
-    gl_Position = MVP * vec4(pos, 1);
-    posOut = (MVP * vec4(pos, 1)).xyz;
+    posOut = pos.xyz;
     uvOut = uvIn;
-    normOut = normIn;
+    normOut = norm;
 }

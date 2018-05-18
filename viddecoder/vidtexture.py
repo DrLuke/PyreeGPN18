@@ -17,7 +17,9 @@ class VideoTexture(Texture):
             glDeleteTextures(self.textures)  # Clean up old texture
         self.textures = [glGenTextures(1)]
 
-    def fetchNext(self):
+        self.endCounter = 0
+
+    def fetchNext(self) -> bool:
         nextFrame = self.decoder.loadNextFrame()
         if nextFrame is not None:
             """imdata = []
@@ -42,6 +44,14 @@ class VideoTexture(Texture):
                          new_array)
             #print(imdata)
             glGenerateMipmap(GL_TEXTURE_2D)
+
+            return True
+        else:
+            self.endCounter += 1
+            if self.endCounter < 10:
+                return self.fetchNext()
+            else:
+                return False
 
 
     def getTexture(self):

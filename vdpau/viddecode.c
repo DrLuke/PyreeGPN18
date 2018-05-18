@@ -178,7 +178,7 @@ int init(void* dec, char path[]) {
     return 0;
 }
 
-#define CHECKSTATUS(msg) if(status<0) {/*printf(msg);*/av_packet_free(&pPacket);return NULL;}
+#define CHECKSTATUS(msg) if(status<0) {printf(msg);av_packet_free(&pPacket);return NULL;}
 uint8_t** nextFrame(void* dec) {
     struct decoderData* decoderdata = (struct decoderData*)dec;
 
@@ -202,10 +202,10 @@ uint8_t** nextFrame(void* dec) {
 
             status = avcodec_receive_frame(decoderdata->pCodecContext, decoderdata->pFrame);
             if (status == AVERROR(EAGAIN)) {
-                //printf("ERROR avcodec_receive_frame AVERROR(EAGAIN)\n");
+                printf("ERROR avcodec_receive_frame AVERROR(EAGAIN)\n");
                 break;
             } else if(status == AVERROR_EOF) {
-                //printf("ERROR avcodec_receive_frame EOF\n");
+                printf("ERROR avcodec_receive_frame EOF\n");
                 break;
             } else CHECKSTATUS("ERROR on avcodec_receive_frame")
             if(status == 0) {
@@ -261,12 +261,12 @@ int getHeight(void* dec) {
 
 static void logging(const char *fmt, ...)
 {
-    /*va_list args;
+    va_list args;
     printf("LOG: " );
     va_start( args, fmt );
     vprintf( fmt, args );
     va_end( args );
-    printf( "\n" );*/
+    printf( "\n" );
 }
 
 /*static int decode_packet(AVPacket *pPacket, AVCodecContext *pCodecContext, AVFrame *pFrame)

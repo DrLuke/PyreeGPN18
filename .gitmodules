@@ -1,0 +1,3 @@
+[submodule "python-lpd8"]
+	path = python-lpd8
+	url = https://github.com/DrLuke/python-lpd8
