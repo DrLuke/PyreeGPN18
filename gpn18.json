@@ -1,0 +1,69 @@
+{
+  "projectName": "Example",
+  "author": "DrLuke",
+  "entry" : {
+    "guid": "ms1",
+    "sigName": "run"
+  },
+  "nodes": [
+    {
+      "name": "Cylinders 1",
+      "guid": "cyl1",
+      "module": "GPN18Mods.cylinders",
+      "class": "cylinder"
+    },
+    {
+      "name": "PremiumLounge",
+      "guid": "plng1",
+      "module": "GPN18Mods.premiumlounge",
+      "class": "PremiumLounge"
+    },
+    {
+      "name": "Couch",
+      "guid": "couch1",
+      "module": "GPN18Mods.couch",
+      "class": "Couch"
+    },
+    {
+      "name": "MultiSwitch",
+      "guid": "ms1",
+      "module": "GPN18Mods.multiswitch",
+      "class": "MultiSwitch"
+    },
+    {
+      "name": "FBOQuad",
+      "guid": "fq1",
+      "module": "GPN18Mods.fboquad",
+      "class": "FBOQuad"
+    }
+  ],
+  "signals": [
+
+  ],
+  "execSignals": [
+    {
+      "source": "ms1",
+      "target": "cyl1",
+      "sourceSigName": "p0",
+      "targetSigName": "run"
+    },
+    {
+      "source": "ms1",
+      "target": "plng1",
+      "sourceSigName": "p1",
+      "targetSigName": "run"
+    },
+    {
+      "source": "ms1",
+      "target": "fq1",
+      "sourceSigName": "p2",
+      "targetSigName": "run"
+    },
+    {
+      "source": "ms1",
+      "target": "couch1",
+      "sourceSigName": "p3",
+      "targetSigName": "run"
+    }
+  ]
+}
